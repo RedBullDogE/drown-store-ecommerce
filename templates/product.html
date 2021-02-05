@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<!--Main layout-->
+<main class="mt-5 pt-3">
+    <div class="container dark-grey-text">
+
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+
+            <!--Grid column-->
+            <div class="col-md-6 mb-4 d-flex flex-wrap align-items-center">
+                <img src="{{ item.image.url }}" class="img-fluid mx-auto align-bottom d-block" alt="Product Image">
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+
+                <!--Content-->
+                <div class="p-4">
+
+                    <div class="mb-3">
+                        <h2>{{ item.title }}</h2>
+                        <a href="">
+                            <span class="badge purple mr-1">{{ item.get_category_display }}</span>
+                        </a>
+                        <a href="">
+                            <span class="badge blue mr-1">New</span>
+                        </a>
+                        <a href="">
+                            <span class="badge red mr-1">Bestseller</span>
+                        </a>
+                    </div>
+
+                    <p class="lead purple-text">
+
+                        {% if item.discount_price %}
+                        <span class="mr-1">
+                            <del class="black-text">${{ item.price }}</del>
+                        </span>
+                        <span><b>${{ item.discount_price }}</b></span>
+                        {% else %}
+                        <span>${{ item.price }}</span>
+                        {% endif %}
+
+                    </p>
+
+
+                    {% if item.description %}
+                    <p class="lead font-weight-bold">Description</p>
+                    <p>{{ item.description }}</p>
+                    {% endif %}
+
+                    <hr>
+
+                    {% comment %} <form class="d-flex justify-content-left">
+                        <!-- Default input -->
+                        <input type="number" value="1" aria-label="Search" class="form-control" style="width: 100px">
+                        <button class="btn btn-primary btn-md my-0 p" type="submit">
+                            Add to cart
+                            <i class="fas fa-shopping-cart ml-1"></i>
+                        </button>
+
+                    </form> {% endcomment %}
+                    <a href="{% url 'core:add-to-cart' item.slug %}" class="btn btn-primary btn-md my-0 p">
+                        Add to cart
+                        <i class="fas fa-shopping-cart ml-1"></i>
+                    </a>
+
+
+                    {% if item.is_ordered %}
+                    <a href="{{ item.get_remove_all }}" class="btn btn-danger btn-md my-0 p">
+                        Remove from cart
+                    </a>
+                    {% endif %}
+
+
+                </div>
+                <!--Content-->
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+        <hr>
+
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center wow fadeIn">
+
+            <!--Grid column-->
+            <div class="col-md-12">
+
+                <h4 class="my-4 h4">Check also</h4>
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+            {% for rec_item in recommended %}
+            <div class="col-lg-3 col-md-4 mb-4">
+                <!--Card-->
+                <div class="card">
+
+                    <!--Card image-->
+                    <div class="view overlay">
+                        <img src="{{ rec_item.image.url }}" class="card-img-top" alt="rec_item photo">
+                        <a href="{{ rec_item.get_absolute_url }}">
+                            <div class="mask rgba-white-slight"></div>
+                        </a>
+                    </div>
+                    <!--Card image-->
+
+                    <!--Card content-->
+                    <div class="card-body text-center">
+                        <!--Category & Title-->
+                        <a href="" class="grey-text">
+                            <h6>{{ rec_item.get_category_display }}</h6>
+                        </a>
+                        <h5>
+                            <strong>
+                                <a href="{{ rec_item.get_absolute_url }}" class="dark-grey-text">
+                                    {{ rec_item.title}}
+                                    {% if rec_item.label == 'N' %}
+                                    <span class="badge badge-pill primary-color">NEW</span>
+                                    {% elif rec_item.label == 'B' %}
+                                    <span class="badge badge-pill warning-color">Bestseller</span>
+                                    {% endif %}
+                                </a>
+                            </strong>
+                        </h5>
+
+                        <h5 class="font-weight-bold blue-text">
+                            <strong>
+                                {% if rec_item.discount_price %}
+                                ${{ rec_item.discount_price }}
+                                {% else %}
+                                ${{ rec_item.price}}
+                                {% endif %}
+                            </strong>
+                        </h5>
+
+                    </div>
+                    <!--Card content-->
+
+                </div>
+                <!--Card-->
+
+            </div>
+            {% endfor %}
+        </div>
+        <!--Grid row-->
+
+        <hr>
+
+        <div class="row wow fadeIn">
+            <p class="text-center col-8 offset-2 mdb-color lighten-5 rounded-pill py-4 px-5">
+                <strong class="lead">We are Drown Store.</strong>
+                <br><br>
+                And we want to prove that convenience is not a sign of wealth, luxury and
+                high society. Convenience is not an exclusive right and for this, as we believe a
+                basic need, you should not need to pay a lot of money.
+                <br><br>
+                We always listen to our customers, we try to make our products and service as comfortable
+                and accessible as possible. We make this world better.
+
+                <br><br>
+                <span class="lead">Join us!</span>
+            </p>
+        </div>
+
+
+
+    </div>
+</main>
+<!--Main layout-->
+{% endblock content %}

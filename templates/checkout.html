@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!--Main layout-->
+<main>
+    <div class="container wow fadeIn">
+        <h2 class="my-5 h2 text-center">Checkout form</h2>
+        <!--Grid row-->
+        <div class="row">
+            <div class="col-md-8 mb-4">
+                <div class="card">
+                    <form method="POST" class="card-body">
+                        {% csrf_token %}
+
+                        <h4>Identification info</h4>
+                        <!-- First Name / Last Name -->
+                        <div class="md-form">
+                            <div class="row">
+
+                                <div class="col-lg-4 col-md-12 mb4">
+                                    {{ form.first_name }}
+                                    <label for="first-name" class="ml-3">First Name</label>
+                                </div>
+                                <div class="col-lg-4 col-md-12 mb4">
+                                    {{ form.last_name }}
+                                    <label for="last-name" class="ml-3">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md-form">
+                            {{ form.phone_number }}
+                            <label for="phone-number" class="">Phone Number</label>
+                        </div>
+
+                        <h4>Destination info</h4>
+                        <!-- Country and Zip Code-->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 mb-2">
+                                <label for="country">Country</label>
+                                {{ form.country }}
+                                <div class="invalid-feedback">
+                                    Please select a valid country.
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 mb-2">
+                                <label for="zip">Zip</label>
+                                {{ form.zip_code }}
+                                <div class="invalid-feedback">
+                                    Zip code required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--address-->
+                        <div class="md-form mb-3">
+                            {{ form.street_address }}
+                            <label for="address" class="">Address</label>
+                        </div>
+
+                        <!--address-2-->
+                        <div class="md-form mb-3">
+                            {{ form.apartment_address }}
+                            <label for="address-2" class="">Address 2 (optional)</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox">
+                            <input {% if form.save_info.value %}checked{% endif %} type="checkbox"
+                                class="custom-control-input" name="save_info" id="save-info" />
+                            <label class="custom-control-label" for="save-info">
+                                Save this information for next time
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <h4>Payment Options</h4>
+                        <div class="d-block my-3">
+                            {% for value, name in form.fields.payment_option.choices %}
+                            <div class="custom-control custom-radio">
+                                <input id="{{ name }}" name="payment_option" value="{{ value }}" type="radio"
+                                    class="custom-control-input" required>
+                                <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
+                            </div>
+
+                            {% endfor %}
+                        </div>
+                        <hr class="mb-4">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                    </form>
+                </div>
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-4 mb-4">
+
+                {% include 'order_snippet.html' %}
+
+                <!-- Promo code -->
+                <form class="card p-2" action="{% url 'core:add-coupon' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        {{ couponForm.code }}
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">Redeem</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- Promo code -->
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+    </div>
+</main>
+<!--Main layout-->
+{% endblock content %}
