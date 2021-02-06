@@ -205,6 +205,12 @@ Drown Store | Home
                     {% endif %}">
                         <a class="nav-link" href="{% url 'core:home-page' %}?filter=outwear">Outwears</a>
                     </li>
+                    <li class="nav-item
+                    {% if request.GET.filter == 'sale' %}
+                        active
+                    {% endif %}">
+                        <a class="nav-link" href="{% url 'core:home-page' %}?filter=sale"><b>Sale</b></a>
+                    </li>
                 </ul>
                 <!-- Links -->
 

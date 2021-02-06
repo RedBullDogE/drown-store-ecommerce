@@ -36,17 +36,20 @@ class HomeView(ListView):
         search_query_val = self.request.GET.get('search', None)
 
         if filter_query_val:
-            # Extra search part is needed for filtering
-            # by HUMAN-READABLE category values
-            # e.g:  ?filter=shirt    -> searching by S
-            #       ?filter=S        -> searching by S
-            extra_search_val = dict(
-                map(lambda string: string.lower(), (v, k))
-                for k, v in Item.CATEGORY_CHOICES
-            ).get(filter_query_val, '')
+            if filter_query_val == 'sale':
+                items = items.filter(discount_price__isnull=False)
+            else:
+                # Extra search part is needed for filtering
+                # by HUMAN-READABLE category values
+                # e.g:  ?filter=shirt    -> searching by S
+                #       ?filter=S        -> searching by S
+                extra_search_val = dict(
+                    map(lambda string: string.lower(), (v, k))
+                    for k, v in Item.CATEGORY_CHOICES
+                ).get(filter_query_val, '')
 
-            items = items.filter(
-                Q(category__iexact=filter_query_val) | Q(category__iexact=extra_search_val))
+                items = items.filter(
+                    Q(category__iexact=filter_query_val) | Q(category__iexact=extra_search_val))
 
         if search_query_val:
             items = items.filter(Q(title__icontains=search_query_val))
