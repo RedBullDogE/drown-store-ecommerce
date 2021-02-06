@@ -21,6 +21,7 @@ pillow = "*"
 django-background-tasks = "*"
 django-phonenumber-field = "*"
 phonenumbers = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"
