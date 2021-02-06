@@ -3,21 +3,20 @@ from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from core.models import Address, Coupon, Order, OrderItem, Payment, Refund
 from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-
 from django.urls import resolve, reverse
-
-from .models import Item
-from .forms import CheckoutForm
-
-import stripe
 from django.db import transaction
 from core.forms import CouponForm, RefundForm
 from django.http import HttpResponse
 from django.db.models import Q
+
+import stripe
+
+from .models import Item, Address, Coupon, Order, OrderItem, Payment, Refund
+from .forms import CheckoutForm
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 

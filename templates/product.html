@@ -23,22 +23,27 @@
 
                     <div class="mb-3">
                         <h2>{{ item.title }}</h2>
-                        <a href="">
+                        <a href="{% url 'core:home-page' %}?filter={{ item.get_category_display.lower }}">
                             <span class="badge purple mr-1">{{ item.get_category_display }}</span>
                         </a>
+
+                        {% if item.label == 'N' %}
                         <a href="">
                             <span class="badge blue mr-1">New</span>
                         </a>
+                        {% elif item.label == 'B' %}
                         <a href="">
-                            <span class="badge red mr-1">Bestseller</span>
+                            <span class="badge orange mr-1">Bestseller</span>
                         </a>
+                        {% endif %}
+
                     </div>
 
                     <p class="lead purple-text">
 
                         {% if item.discount_price %}
                         <span class="mr-1">
-                            <del class="black-text">${{ item.price }}</del>
+                            <del class="black-text small">${{ item.price }}</del>
                         </span>
                         <span><b>${{ item.discount_price }}</b></span>
                         {% else %}

@@ -227,6 +227,10 @@
                     <!--Card-->
                     <div class="card">
 
+                        {% if item.discount_price %}
+                        <span class="red white-text">SALE</span>
+                        {% endif %}
+
                         <!--Card image-->
                         <div class="view overlay">
                             <img src="{{ item.image.url }}" class="card-img-top" alt="Item photo">
@@ -239,7 +243,8 @@
                         <!--Card content-->
                         <div class="card-body text-center">
                             <!--Category & Title-->
-                            <a href="" class="grey-text">
+                            <a href="{% url 'core:home-page' %}?filter={{ item.get_category_display.lower }}"
+                                class="grey-text">
                                 <h5>{{ item.get_category_display }}</h5>
                             </a>
                             <h5>
@@ -258,7 +263,8 @@
                             <h4 class="font-weight-bold blue-text">
                                 <strong>
                                     {% if item.discount_price %}
-                                    ${{ item.discount_price }}
+                                    <del class="small grey-text">${{ item.price}}</del>
+                                    <span class="green-text">${{ item.discount_price }}</span>
                                     {% else %}
                                     ${{ item.price}}
                                     {% endif %}
