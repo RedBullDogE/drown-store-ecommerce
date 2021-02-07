@@ -27,6 +27,13 @@ class HomeView(ListView):
     context_object_name = "items"
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        # get human-readable categories
+        context['categories'] = list(zip(*Item.CATEGORY_CHOICES))[1]
+
+        return context
+
     def get_queryset(self):
         # original queryset
         items = Item.objects.all()

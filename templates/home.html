@@ -187,24 +187,20 @@ Drown Store | Home
                     {% endif %}">
                         <a class="nav-link" href="{% url 'core:home-page' %}">All</a>
                     </li>
+
+
+                    <!-- Categories filter -->
+                    {% for category in categories %}
                     <li class="nav-item
-                    {% if request.GET.filter == 'shirt' %}
+                    {% if request.GET.filter == category.lower %}
                         active
                     {% endif %}">
-                        <a class="nav-link" href="{% url 'core:home-page' %}?filter=shirt">Shirts</a>
+                        <a class="nav-link" href="{% url 'core:home-page' %}?filter={{ category.lower }}">
+                            {{ category }}</a>
                     </li>
-                    <li class="nav-item
-                    {% if request.GET.filter == 'sport wear' %}
-                        active
-                    {% endif %}">
-                        <a class="nav-link" href="{% url 'core:home-page' %}?filter=sport%20wear">Sport wears</a>
-                    </li>
-                    <li class="nav-item
-                    {% if request.GET.filter == 'outwear' %}
-                        active
-                    {% endif %}">
-                        <a class="nav-link" href="{% url 'core:home-page' %}?filter=outwear">Outwears</a>
-                    </li>
+                    {% endfor %}
+
+                    <!-- SALE FILTER -->
                     <li class="nav-item
                     {% if request.GET.filter == 'sale' %}
                         active
