@@ -9,6 +9,7 @@ from re import sub
 
 from .utils import generate_random_code
 from django.db.models import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
 # from background_task import background
 
@@ -136,10 +137,18 @@ class Order(models.Model):
     refund_granted = models.BooleanField(default=False)
 
     def get_order_price(self):
-        coupon_amount = 0
+        order_price_dirty = sum([order_item.get_total_price()
+                                 for order_item in self.items.all()])
+
         if self.coupon and self.items.count():
             coupon_amount = self.coupon.amount
-        return sum([order_item.get_total_price() for order_item in self.items.all()]) - coupon_amount
+
+            if self.coupon.discount_type == 'A':
+                return order_price_dirty - coupon_amount
+            else:
+                return order_price_dirty * (100 - coupon_amount) / 100
+
+        return order_price_dirty
 
 
 class Address(models.Model):
@@ -174,8 +183,27 @@ class Payment(models.Model):
 
 
 class Coupon(models.Model):
+    DISCOUNT_TYPE_CHOICES = (
+        ('A', 'Absolute'),
+        ('R', 'Relative'),
+    )
+
     code = models.CharField(max_length=15)
+    discount_type = models.CharField(
+        max_length=1, choices=DISCOUNT_TYPE_CHOICES, default='A')
     amount = models.FloatField(default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # object is being created, thus no primary key field yet
+            if self.amount < 0:
+                raise ValidationError(
+                    'Amount value of coupon must be greater than zero')
+
+            if self.discount_type == 'R' and self.amount > 100:
+                raise ValidationError(
+                    'Amount value of RELATIVE type coupon should be a percent value (between 0 and 100%)')
+
+        super(Coupon, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.code

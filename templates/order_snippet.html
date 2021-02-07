@@ -23,7 +23,13 @@
             <h6 class="my-0">Promo code</h6>
             <small>{{ order.coupon.code }}</small>
         </div>
+
+        {% if order.coupon.discount_type == 'A' %}
         <span class="text-success">-${{ order.coupon.amount }}</span>
+        {% else %}
+        <span class="text-danger">-{{ order.coupon.amount }}%</span>
+        {% endif %}
+
     </li>
     {% endif %}
 

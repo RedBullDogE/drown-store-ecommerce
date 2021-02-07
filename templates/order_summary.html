@@ -76,7 +76,13 @@ Drown Store | Order Summary
                     {% if order.coupon %}
                     <tr>
                         <td colspan="4"><strong>Coupon:</strong></td>
-                        <td>-${{ order.coupon.amount }}</td>
+                        <td>
+                            {% if order.coupon.discount_type == 'A' %}
+                            -${{ order.coupon.amount }}
+                            {% else %}
+                            {{ order.coupon.amount }}%
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endif %}
                     <tr>
