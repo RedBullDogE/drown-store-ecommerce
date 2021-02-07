@@ -10,6 +10,20 @@ def make_refund_accepted(model_admin, request, queryset):
 
 make_refund_accepted.short_description = 'Update orders to refund granted'
 
+
+def make_being_delivered(model_admin, request, queryset):
+    queryset.update(being_delivered=True)
+
+
+make_being_delivered.short_description = 'Update orders to being delivered'
+
+
+def make_refund_accepted(model_admin, request, queryset):
+    queryset.update(accepted=True)
+
+
+make_refund_accepted.short_description = 'Accept refund'
+
 # Admin classes
 
 
@@ -52,7 +66,7 @@ class OrderAdmin(admin.ModelAdmin):
         'ref_code'
     ]
 
-    actions = [make_refund_accepted]
+    actions = [make_refund_accepted, make_being_delivered]
 
 
 class OrderItemAdmin(admin.ModelAdmin):
@@ -78,9 +92,21 @@ class AddressAdmin(admin.ModelAdmin):
     search_fields = ['user', 'street_address', 'apartment_address', 'zip_code']
 
 
+class RefundAdmin(admin.ModelAdmin):
+    list_display = [
+        '__str__',
+        'accepted',
+        'email'
+    ]
+
+    search_fields = ['email']
+    actions = [make_refund_accepted]
+
+
 admin.site.register(Item, ItemAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Payment)
 admin.site.register(Coupon)
+admin.site.register(Refund, RefundAdmin)

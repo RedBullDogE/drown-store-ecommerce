@@ -15,9 +15,9 @@ from django.db.models import ObjectDoesNotExist
 
 class Item(models.Model):
     CATEGORY_CHOICES = (
-        ('S', 'Shirt'),
-        ('SW', 'Sport wear'),
-        ('OW', 'Outwear'),
+        ('S', 'Sport'),
+        ('C', 'Casual'),
+        ('F', 'Formal'),
     )
 
     LABEL_CHOICES = (
@@ -188,4 +188,4 @@ class Refund(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return f"{self.pk}"
+        return f"{self.order.ref_code}"
