@@ -79,7 +79,7 @@ Drown Store | {{ item.title }}
 
 
                     {% if item.is_ordered %}
-                    <a href="{{ item.get_remove_all }}" class="btn btn-danger btn-md my-0 p">
+                    <a href="{% url 'core:remove-from-cart-all' item.slug %}" class="btn btn-danger btn-md my-0 p">
                         Remove from cart
                     </a>
                     {% endif %}
@@ -120,7 +120,7 @@ Drown Store | {{ item.title }}
                     <!--Card image-->
                     <div class="view overlay">
                         <img src="{{ rec_item.image.url }}" class="card-img-top" alt="rec_item photo">
-                        <a href="{{ rec_item.get_absolute_url }}">
+                        <a href="{% url 'core:product-page' rec_item.slug %}">
                             <div class="mask rgba-white-slight"></div>
                         </a>
                     </div>
@@ -134,7 +134,7 @@ Drown Store | {{ item.title }}
                         </a>
                         <h5>
                             <strong>
-                                <a href="{{ rec_item.get_absolute_url }}" class="dark-grey-text">
+                                <a href="{% url 'core:product-page' rec_item.slug %}" class="dark-grey-text">
                                     {{ rec_item.title}}
                                     {% if rec_item.label == 'N' %}
                                     <span class="badge badge-pill primary-color">NEW</span>

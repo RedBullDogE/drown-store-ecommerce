@@ -241,7 +241,7 @@ Drown Store | Home
                         <!--Card image-->
                         <div class="view overlay">
                             <img src="{{ item.image.url }}" class="card-img-top" alt="Item photo">
-                            <a href="{{ item.get_absolute_url }}">
+                            <a href="{% url 'core:product-page' item.slug %}">
                                 <div class="mask rgba-white-slight"></div>
                             </a>
                         </div>
@@ -256,7 +256,7 @@ Drown Store | Home
                             </a>
                             <h5>
                                 <strong>
-                                    <a href="{{ item.get_absolute_url }}" class="dark-grey-text">
+                                    <a href="{% url 'core:product-page' item.slug %}" class="dark-grey-text">
                                         {{ item.title}}
                                         {% if item.is_new %}
                                         <span class="badge badge-pill primary-color">NEW</span>

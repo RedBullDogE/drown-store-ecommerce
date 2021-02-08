@@ -48,21 +48,6 @@ class Item(models.Model):
             'slug': self.slug
         })
 
-    def get_add_to_cart(self, redirect=None):
-        return reverse('core:add-to-cart', kwargs={
-            'slug': self.slug
-        })
-
-    def get_remove_all(self):
-        return reverse('core:remove-from-cart-all', kwargs={
-            'slug': self.slug
-        })
-
-    def get_remove_single(self):
-        return reverse('core:remove-from-cart-single', kwargs={
-            'slug': self.slug
-        })
-
     def is_ordered(self):
         return self.order_item.filter(ordered=False).exists()
 
