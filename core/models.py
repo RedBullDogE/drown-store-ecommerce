@@ -10,8 +10,13 @@ from re import sub
 from .utils import generate_random_code
 from django.db.models import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 # from background_task import background
+
+# TODO: Add 'New' label autoset
+
+# TODO: Add thumbnail creation for product photos
 
 
 class Item(models.Model):
@@ -22,7 +27,6 @@ class Item(models.Model):
     )
 
     LABEL_CHOICES = (
-        ('N', 'new'),
         ('B', 'bestseller'),
     )
 
@@ -61,6 +65,9 @@ class Item(models.Model):
 
     def is_ordered(self):
         return self.order_item.filter(ordered=False).exists()
+
+    def is_new(self):
+        return timezone.now() - self.time_added < timezone.timedelta(days=1)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # object is being created, thus no primary key field yet

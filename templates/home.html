@@ -258,7 +258,7 @@ Drown Store | Home
                                 <strong>
                                     <a href="{{ item.get_absolute_url }}" class="dark-grey-text">
                                         {{ item.title}}
-                                        {% if item.label == 'N' %}
+                                        {% if item.is_new %}
                                         <span class="badge badge-pill primary-color">NEW</span>
                                         {% elif item.label == 'B' %}
                                         <span class="badge badge-pill warning-color">Bestseller</span>
