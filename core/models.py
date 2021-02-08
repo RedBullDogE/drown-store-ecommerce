@@ -11,6 +11,7 @@ from .utils import generate_random_code
 from django.db.models import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.text import slugify
 
 # from background_task import background
 
@@ -58,7 +59,7 @@ class Item(models.Model):
         if not self.pk:  # object is being created, thus no primary key field yet
 
             # generating slug field from title
-            title_slug_part = sub('\s+', '-', self.title)
+            title_slug_part = slugify(self.title)
             random_slug_part = generate_random_code(8)
             self.slug = f"{title_slug_part}-{random_slug_part}".lower()
 
