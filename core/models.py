@@ -17,6 +17,7 @@ from django.core.files.base import ContentFile
 from io import BytesIO
 from PIL import Image
 from pathlib import Path
+from django.dispatch.dispatcher import receiver
 
 # from background_task import background
 
@@ -76,10 +77,13 @@ class Item(models.Model):
             self.slug = f"{title_slug_part}-{random_slug_part}".lower()
 
             # Creating thumbnail
-            if not self.make_thumbnail():
-                # set to a default thumbnail
-                raise Exception(
-                    'Could not create thumbnail - is the file type valid?')
+            if self.image.name == 'default.png':
+                self.thumb_image.name = 'default.png'
+            else:
+                if not self.make_thumbnail():
+                    # set to a default thumbnail
+                    raise Exception(
+                        'Could not create thumbnail - is the file type valid?')
 
             self.save()
 
@@ -259,3 +263,18 @@ class Refund(models.Model):
 
     def __str__(self):
         return f"{self.order.ref_code}"
+
+
+@receiver(models.signals.post_delete, sender=Item)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.image:
+        if Path(instance.image.path).is_file() and instance.image.name != 'default.png':
+            Path(instance.image.path).unlink()
+
+    if instance.thumb_image:
+        if Path(instance.thumb_image.path).is_file() and instance.thumb_image.name != 'default.png':
+            Path(instance.thumb_image.path).unlink()
