@@ -13,6 +13,11 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.text import slugify
 
+from django.core.files.base import ContentFile
+from io import BytesIO
+from PIL import Image
+from pathlib import Path
+
 # from background_task import background
 
 # TODO: Add 'New' label autoset
@@ -44,6 +49,9 @@ class Item(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
     image = models.ImageField(
         upload_to="clothes_pictures", default="default.png")
+    thumb_image = models.ImageField(
+        upload_to="clothes_pictures/thumbs", null=True, blank=True
+    )
 
     def get_absolute_url(self):
         return reverse('core:product-page', kwargs={
@@ -57,14 +65,54 @@ class Item(models.Model):
         return timezone.now() - self.time_added < timezone.timedelta(days=1)
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # object is being created, thus no primary key field yet
+        is_new = self._state.adding
+        super(Item, self).save(*args, **kwargs)
+
+        if is_new:  # object is being created, thus no primary key field yet
 
             # generating slug field from title
             title_slug_part = slugify(self.title)
             random_slug_part = generate_random_code(8)
             self.slug = f"{title_slug_part}-{random_slug_part}".lower()
 
-        super(Item, self).save(*args, **kwargs)
+            # Creating thumbnail
+            if not self.make_thumbnail():
+                # set to a default thumbnail
+                raise Exception(
+                    'Could not create thumbnail - is the file type valid?')
+
+            self.save()
+
+    def make_thumbnail(self):
+        thumb_size = (512, 512)
+        image = Image.open(self.image)
+        image.thumbnail(thumb_size, Image.ANTIALIAS)
+
+        thumb_extension = Path(self.image.name).suffix.lower()
+        thumb_name = Path(self.image.name).stem
+
+        thumb_filename = thumb_name + '_thumb' + thumb_extension
+
+        if thumb_extension in ['.jpg', '.jpeg']:
+            FTYPE = 'JPEG'
+        elif thumb_extension == '.gif':
+            FTYPE = 'GIF'
+        elif thumb_extension == '.png':
+            FTYPE = 'PNG'
+        else:
+            return False    # Unrecognized file type
+
+        # Save thumbnail to in-memory file as StringIO
+        temp_thumb = BytesIO()
+        image.save(temp_thumb, FTYPE)
+        temp_thumb.seek(0)
+
+        # set save=False, otherwise it will run in an infinite loop
+        self.thumb_image.save(thumb_filename, ContentFile(
+            temp_thumb.read()), save=False)
+        temp_thumb.close()
+
+        return True
 
     def __str__(self):
         return f'{self.title} ({self.slug})'
