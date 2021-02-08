@@ -80,7 +80,7 @@ Drown Store | Order Summary
                             {% if order.coupon.discount_type == 'A' %}
                             -${{ order.coupon.amount }}
                             {% else %}
-                            {{ order.coupon.amount }}%
+                            <mark class="light-green accent-2">-{{ order.coupon.amount }}%</mark>
                             {% endif %}
                         </td>
                     </tr>

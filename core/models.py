@@ -29,6 +29,7 @@ class Item(models.Model):
 
     LABEL_CHOICES = (
         ('B', 'bestseller'),
+        ('BP', 'best price')
     )
 
     title = models.CharField(max_length=100)

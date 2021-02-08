@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% load filters %}
+
+{% block head_title %}
+Drown Store | Your orders
+{% endblock head_title %}
+
+{% block content %}
+<main>
+    <div class="container">
+
+        <div class="table-responsive text-nowrap">
+            <h2>Order List</h2>
+            <table class="table table-hover table-bordered">
+                <thead class="text-center grey darken-1 white-text">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Coupon</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for order in orders %}
+                    <tr>
+                        <td scope="row" class="text-center">{{ forloop.counter }}</td>
+                        <td>
+                            <ul>
+                                {% for order_item in order.items.all|slice:":5" %}
+                                <li><mark>{{ order_item.item.title }}</mark> x
+                                    {{ order_item.quantity }}
+                                </li>
+                                {% endfor %}
+
+                                {% if order.items.count > 5 %}
+                                <li>...</li>
+                                {% endif %}
+                            </ul>
+
+
+                        </td>
+                        <td>
+                            ${{ order.get_order_price }}
+                        </td>
+                        <td>
+                            {{ order.ordered_date }}
+                        </td>
+                        <td class="text-center">
+                            {% if order.coupon %}
+                            <i class="far fa-check-circle"></i>
+                            <br>
+                            {% if order.coupon.discount_type == 'A' %}
+                            -${{ order.coupon.amount }}
+                            {% else %}
+                            -{{ order.coupon.amount }}%
+                            {% endif %}
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr class="text-center">
+                        <td colspan="5">
+                            <p class="h3">Your order list is empty yet! Let's make the first order :)</p>
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="5">
+                            <a href="/" class="btn btn-light">Go to the home page!</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</main>
+<!--Main layout-->
+{% endblock content %}

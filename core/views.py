@@ -100,7 +100,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
         return render(self.request, "order_summary.html", context)
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         checkout_form = CheckoutForm()
         coupon_form = CouponForm()
@@ -233,7 +233,7 @@ def remove_from_cart(request, slug, all_items=True, *args, **kwargs):
     return redirect("core:product-page", slug=slug)
 
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
 
@@ -270,6 +270,7 @@ class PaymentView(View):
 
             order.ordered = True
             order.payment = payment
+            order.ordered_date = timezone.now()
             order.save()
 
             order_items = order.items.all()
@@ -309,7 +310,7 @@ class PaymentView(View):
         return redirect('/')
 
 
-class AddCouponView(View):
+class AddCouponView(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
         form = CouponForm(self.request.POST or None)
 
@@ -338,7 +339,7 @@ class AddCouponView(View):
                 return redirect("core:checkout-page")
 
 
-class RequestRefundView(View):
+class RequestRefundView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         context = {
             'form': RefundForm()
@@ -369,3 +370,12 @@ class RequestRefundView(View):
 
             messages.success(self.request, "Your refund request was received!")
             return redirect("/")
+
+
+class OrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'order_list.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        return Order.objects.filter(ordered=True, user=self.request.user)
