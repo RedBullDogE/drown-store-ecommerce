@@ -79,9 +79,8 @@ class ItemDetailView(DetailView):
 
         if not same_category_recommendations.exists():
             another_recommendations = Item.objects.all().exclude(
-                id=item_object.id).order_by('-id')[:5]
+                id=item_object.id).order_by('-id')[:4]
 
-            print(another_recommendations)
             context['recommended'] = another_recommendations
         else:
             context['recommended'] = same_category_recommendations

@@ -260,7 +260,8 @@ Drown Store | Home
                                         {{ item.title}}
                                         {% if item.is_new %}
                                         <span class="badge badge-pill primary-color">NEW</span>
-                                        {% elif item.label == 'B' %}
+                                        {% endif %}
+                                        {% if item.label == 'B' %}
                                         <span class="badge badge-pill warning-color">Bestseller</span>
                                         {% endif %}
                                     </a>

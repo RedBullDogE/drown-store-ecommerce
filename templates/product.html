@@ -25,19 +25,19 @@ Drown Store | {{ item.title }}
                 <div class="p-4">
 
                     <div class="mb-3">
-                        <h2>{{ item.title }}</h2>
+                        <h2>
+                            {{ item.title }}
+                            {% if item.is_new %}
+                            <span class="badge small primary-color mr-1">NEW</span>
+                            {% endif %}
+                        </h2>
                         <a href="{% url 'core:home-page' %}?filter={{ item.get_category_display.lower }}">
                             <span class="badge purple mr-1">{{ item.get_category_display }}</span>
                         </a>
 
-                        {% if item.label == 'N' %}
-                        <a href="">
-                            <span class="badge blue mr-1">New</span>
-                        </a>
-                        {% elif item.label == 'B' %}
-                        <a href="">
-                            <span class="badge orange mr-1">Bestseller</span>
-                        </a>
+
+                        {% if item.label == 'B' %}
+                        <span class="badge orange mr-1">Bestseller</span>
                         {% endif %}
 
                     </div>
@@ -119,7 +119,7 @@ Drown Store | {{ item.title }}
 
                     <!--Card image-->
                     <div class="view overlay">
-                        <img src="{{ rec_item.image.url }}" class="card-img-top" alt="rec_item photo">
+                        <img src="{{ rec_item.thumb_image.url }}" class="card-img-top" alt="rec_item photo">
                         <a href="{% url 'core:product-page' rec_item.slug %}">
                             <div class="mask rgba-white-slight"></div>
                         </a>
@@ -129,7 +129,8 @@ Drown Store | {{ item.title }}
                     <!--Card content-->
                     <div class="card-body text-center">
                         <!--Category & Title-->
-                        <a href="" class="grey-text">
+                        <a href="{% url 'core:home-page' %}?filter={{ rec_item.get_category_display.lower }}"
+                            class="grey-text">
                             <h6>{{ rec_item.get_category_display }}</h6>
                         </a>
                         <h5>

@@ -63,7 +63,7 @@ class Item(models.Model):
         return self.order_item.filter(ordered=False).exists()
 
     def is_new(self):
-        return timezone.now() - self.time_added < timezone.timedelta(days=1)
+        return timezone.now() - self.time_added < timezone.timedelta(days=7)
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
