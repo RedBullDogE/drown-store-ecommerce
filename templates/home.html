@@ -236,10 +236,12 @@ Drown Store | Home
 
                         {% if item.discount_price %}
                         <span class="red white-text">SALE</span>
+                        {% else %}
+                        <span class="">&nbsp;</span>
                         {% endif %}
 
                         <!--Card image-->
-                        <div class="view overlay">
+                        <div class="view overlay img-wrapper">
                             <img src="{{ item.thumb_image.url }}" class="card-img-top" alt="Item photo">
                             <a href="{% url 'core:product-page' item.slug %}">
                                 <div class="mask rgba-white-slight"></div>
@@ -257,7 +259,9 @@ Drown Store | Home
                             <h5>
                                 <strong>
                                     <a href="{% url 'core:product-page' item.slug %}" class="dark-grey-text">
-                                        {{ item.title}}
+                                        <div class="text-truncate">
+                                            {{ item.title }}
+                                        </div>
                                         {% if item.is_new %}
                                         <span class="badge badge-pill primary-color">NEW</span>
                                         {% endif %}

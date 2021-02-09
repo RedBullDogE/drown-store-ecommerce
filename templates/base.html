@@ -32,6 +32,28 @@
             min-height: 100%;
         }
 
+        /* Fix for diferent size images on home page */
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-wrapper:after {
+            content: '';
+            display: block;
+            padding-top: 140%;
+        }
+
+        .img-wrapper img {
+            width: auto;
+            height: 100%;
+            max-width: none;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
         /* 
 
         .footer {
