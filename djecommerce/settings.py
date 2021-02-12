@@ -110,5 +110,16 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
 # CRISPY FORMS
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Allauth
+# ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
+
+# Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
