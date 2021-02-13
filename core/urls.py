@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import (HomeView, CheckoutView, ItemDetailView,
-                    add_to_cart, remove_from_cart, OrderSummaryView,
-                    PaymentView, AddCouponView, RequestRefundView, OrderListView)
+
+from .views import (AddCouponView, CheckoutView, HomeView, ItemDetailView,
+                    OrderListView, OrderSummaryView, PaymentView,
+                    RequestRefundView, add_to_cart, remove_from_cart)
 
 app_name = 'core'
 

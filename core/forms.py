@@ -1,9 +1,8 @@
+from allauth.account.forms import SignupForm
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 from phonenumber_field.formfields import PhoneNumberField
-from allauth.account.forms import SignupForm
-
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
