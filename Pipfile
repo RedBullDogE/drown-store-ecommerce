@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+isort = "*"
 
 [packages]
 autopep8 = "==1.4.4"

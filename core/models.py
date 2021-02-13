@@ -1,29 +1,21 @@
-from django.db import models
-from django.conf import settings
-from django.urls import reverse
-from django_countries.fields import CountryField
-from phonenumber_field.modelfields import PhoneNumberField
-
-
+from io import BytesIO
+from pathlib import Path
 from re import sub
 
-from .utils import generate_random_code
-from django.db.models import ObjectDoesNotExist
+from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
+from django.db import models
+from django.db.models import ObjectDoesNotExist
+from django.dispatch.dispatcher import receiver
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-
-from django.core.files.base import ContentFile
-from io import BytesIO
+from django_countries.fields import CountryField
+from phonenumber_field.modelfields import PhoneNumberField
 from PIL import Image
-from pathlib import Path
-from django.dispatch.dispatcher import receiver
 
-# from background_task import background
-
-# TODO: Add 'New' label autoset
-
-# TODO: Add thumbnail creation for product photos
+from .utils import generate_random_code
 
 
 class Item(models.Model):
