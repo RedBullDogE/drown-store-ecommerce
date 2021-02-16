@@ -113,9 +113,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Allauth
 # ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Email
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.zoho.eu'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
