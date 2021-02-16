@@ -377,3 +377,10 @@ class OrderListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Order.objects.filter(ordered=True, user=self.request.user)
+
+
+class UserProfileView(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        context = {}
+        return render(self.request, "views/profile.html", context)
+

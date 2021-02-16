@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+Drown Store | Profile Page
+{% endblock head_title %}
+
+{% block content %}
+<main>
+    <div class="container wow fadeIn">
+        <div class="row mt-3">
+            <div class="col-6 offset-3">
+                <h1>Profile</h1>
+            
+                <!-- Card -->
+                <div class="card promoting-card">
+                    {% with user=request.user %}
+                    <!-- Card content -->
+                    <div class="card-body d-flex flex-row">
+                        
+                        <!-- Content -->
+                        <div>
+                    
+                            <!-- Title -->
+                            <h4 class="card-title font-weight-bold mb-2">Username: <span class="blue-text">{{ user.username }}</span></h4>
+                            <!-- Subtitle -->
+                            <p class="card-text"><i class="far fa-clock pr-2"></i>Register date: {{ user.date_joined|date }}</p>
+                    
+                        </div>
+            
+                    </div>
+                
+                    <!-- Card content -->
+                    <div class="card-body pt-2">
+                
+                        <div class="collapse-content">
+
+                            <h4>User information</h4>
+                            <p><b>Email:</b> {{ user.email }}</p>
+                            <p><b>First Name:</b> {{ user.first_name }}</p>
+                            <p><b>Last Name:</b> {{ user.last_name }}</p>
+
+                            <hr>
+
+                            <h4>Personal information</h4>
+                            <p><b>Address:</b> {{ user.last_name }}</p>
+                            <p><b>Country:</b> {{ user.last_name }}</p>
+                            <p><b>City:</b> {{ user.last_name }}</p>
+                            <p><b>Zip Code:</b> {{ user.last_name }}</p>
+                            
+                            <hr>
+
+                            <!-- Text -->
+                            <div class="card-text collapse" id="collapseContent">
+                                <p><a class="btn btn-flat" href="{% url 'account_change_password' %}">Change password</a></p>
+                            </div>
+                            <!-- Button -->
+                            <div class="text-center">
+                                <a class="btn btn-flat red-text p-1 my-1 mr-0 mml-1 collapsed" data-toggle="collapse" href="#collapseContent" aria-expanded="false" aria-controls="collapseContent">More options</a>
+                            </div>
+                    
+                        </div>
+                
+                    </div>
+                    {% endwith %}
+                </div>
+                <!-- Card -->
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

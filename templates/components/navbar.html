@@ -55,7 +55,7 @@
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false">User <span class="blue-text">{{ request.user.username }}</span></a>
                     <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{% url 'core:user-profile' %}">
                             <i class="fas fa-user"></i>
                             Profile
                         </a>
