@@ -90,7 +90,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    {% include 'navbar.html' %}
+    {% include 'components/navbar.html' %}
 
     <div class="container mt-5 pt-4">
         {% if messages %}
@@ -117,9 +117,9 @@
     {% block extra_body %}
     {% endblock %}
 
-    {% include 'footer.html' %}
+    {% include 'components/footer.html' %}
 
-    {% include 'scripts.html' %}
+    {% include 'components/scripts.html' %}
 
 
     {% block extra_scripts %}

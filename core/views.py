@@ -22,7 +22,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class HomeView(ListView):
     model = Item
-    template_name = "home.html"
+    template_name = "views/home.html"
     context_object_name = "items"
     paginate_by = 10
 
@@ -65,7 +65,7 @@ class HomeView(ListView):
 
 class ItemDetailView(DetailView):
     model = Item
-    template_name = "product.html"
+    template_name = "views/product.html"
     context_object_name = "item"
 
     def get_context_data(self, **kwargs):
@@ -95,7 +95,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             order = Order.objects.create(user=self.request.user)
 
         context = {"order": order}
-        return render(self.request, "order_summary.html", context)
+        return render(self.request, "views/order_summary.html", context)
 
 
 class CheckoutView(LoginRequiredMixin, View):
@@ -108,7 +108,7 @@ class CheckoutView(LoginRequiredMixin, View):
             'couponForm': coupon_form,
             'order': order
         }
-        return render(self.request, "checkout.html", context)
+        return render(self.request, "views/checkout.html", context)
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -240,7 +240,7 @@ class PaymentView(LoginRequiredMixin, View):
                 'order': order
             }
 
-            return render(self.request, "payment.html", context)
+            return render(self.request, "views/payment.html", context)
         else:
             messages.warning(
                 self.request, "You do not enter you shipping address")
@@ -342,7 +342,7 @@ class RequestRefundView(LoginRequiredMixin, View):
         context = {
             'form': RefundForm()
         }
-        return render(self.request, "refund.html", context)
+        return render(self.request, "views/refund.html", context)
 
     def post(self, *args, **kwargs):
         form = RefundForm(self.request.POST or None)
@@ -372,7 +372,7 @@ class RequestRefundView(LoginRequiredMixin, View):
 
 class OrderListView(LoginRequiredMixin, ListView):
     model = Order
-    template_name = 'order_list.html'
+    template_name = 'views/order_list.html'
     context_object_name = 'orders'
 
     def get_queryset(self):
