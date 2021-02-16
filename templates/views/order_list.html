@@ -19,6 +19,7 @@ Drown Store | Your orders
                         <th scope="col">Price</th>
                         <th scope="col">Date</th>
                         <th scope="col">Coupon</th>
+                        <th scope="col">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,16 +59,30 @@ Drown Store | Your orders
                             {% endif %}
                             {% endif %}
                         </td>
+                        <td class="text-center">
+                            <h5>
+                                <strong>
+                                {% if order.received %}
+                                <i class="fas fa-check-square green-text mr-2"></i>Received
+                                {% elif order.being_delivered %}
+                                <i class="fas fa-plane blue-text mr-2"></i>Being delivered
+                                {% else %}
+                                <i class="fas fa-cog grey-text mr-2"></i>In processing
+                                {% endif %}
+                                </strong>
+                            </h5>
+                            
+                        </td>
 
                     </tr>
                     {% empty %}
                     <tr class="text-center">
-                        <td colspan="5">
+                        <td colspan="6">
                             <p class="h3">Your order list is empty yet! Let's make the first order :)</p>
                         </td>
                     </tr>
                     <tr class="text-center">
-                        <td colspan="5">
+                        <td colspan="6">
                             <a href="/" class="btn btn-light">Go to the home page!</a>
                         </td>
                     </tr>
