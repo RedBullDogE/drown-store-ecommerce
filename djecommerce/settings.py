@@ -6,7 +6,7 @@ DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.djangoapptest.gq', 'djangoapptest.gq', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,7 +84,6 @@ DATABASES = {
 
 if ENVIRONMENT == 'production':
     DEBUG = False
-    SECRET_KEY = os.getenv('SECRET_KEY')
     SESSION_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True

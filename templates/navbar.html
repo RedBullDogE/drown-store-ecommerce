@@ -51,10 +51,19 @@
                         <span class="badge red z-depth-1 mr-1"> {{ request.user|item_count }} </span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link waves-effect" href="{% url 'account_logout' %}">
-                        <span class="clearfix d-none d-sm-inline-block">Logout</span>
-                    </a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">User <span class="blue-text">{{ request.user.username }}</span></a>
+                    <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user"></i>
+                            Profile
+                        </a>
+                        <a class="dropdown-item" href="{% url 'account_logout' %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
                 </li>
                 {% else %}
                 <li class="nav-item">
