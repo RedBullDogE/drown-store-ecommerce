@@ -35,7 +35,7 @@ class Item(models.Model):
     discount_price = models.FloatField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
     label = models.CharField(choices=LABEL_CHOICES,
-                             max_length=1, null=True, blank=True)
+                             max_length=2, null=True, blank=True)
     description = models.TextField(default='', blank=True, null=True)
 
     time_added = models.DateTimeField(auto_now_add=True)

@@ -368,6 +368,10 @@ class RequestRefundView(LoginRequiredMixin, View):
 
             messages.success(self.request, "Your refund request was received!")
             return redirect("/")
+        else:
+            
+            messages.warning(self.request, f"Invalid form data, please enter the correct data (email)")
+            return redirect("core:refund")
 
 
 class OrderListView(LoginRequiredMixin, ListView):
