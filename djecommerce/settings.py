@@ -6,7 +6,7 @@ DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
-ALLOWED_HOSTS = ['www.djangoapptest.gq', 'djangoapptest.gq', 'localhost']
+ALLOWED_HOSTS = ['store.drowningclub.gq', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
