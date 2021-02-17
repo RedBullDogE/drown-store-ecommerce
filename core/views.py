@@ -4,10 +4,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
 from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template import loader
 from django.urls import resolve, reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView, View
@@ -276,6 +278,30 @@ class PaymentView(LoginRequiredMixin, View):
             with transaction.atomic():
                 for item in order_items:
                     item.save()
+            
+            text_message = loader.render_to_string(
+                'account/email/success_payment.txt',
+                {
+                    'username': order.user.username,
+                    'ref_code': order.ref_code
+                }
+            )
+
+            html_message = loader.render_to_string(
+                'account/email/success_payment.html',
+                {
+                    'username': order.user.username,
+                    'ref_code': order.ref_code
+                }
+            )
+            
+            send_mail(
+                'Success Payment',
+                text_message,
+                from_email=None,
+                recipient_list=[order.user.email],
+                html_message=html_message
+            )
 
             messages.success(
                 self.request, "Your order was successfully processed")
@@ -303,6 +329,7 @@ class PaymentView(LoginRequiredMixin, View):
             messages.warning(self.request, "Something went wrong")
         except Exception as e:
             # Send an email to ourselves
+            raise(e)
             messages.warning(self.request, "A seriuos error occured.")
 
         return redirect('/')
@@ -337,7 +364,7 @@ class AddCouponView(LoginRequiredMixin, View):
                 return redirect("core:checkout-page")
 
 
-class RequestRefundView(LoginRequiredMixin, View):
+class RequestRefundView(View):
     def get(self, *args, **kwargs):
         context = {
             'form': RefundForm()
@@ -380,7 +407,7 @@ class OrderListView(LoginRequiredMixin, ListView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        return Order.objects.filter(ordered=True, user=self.request.user)
+        return Order.objects.filter(ordered=True, user=self.request.user).order_by('-ordered_date')
 
 
 class UserProfileView(LoginRequiredMixin, View):

@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hi, {{ username }}!
+
+We are very glad that you have used our service. Your order with code {{ ref_code }} has been successfully paid for. 
+
+Our managers will process your order in the near future and will contact you as needed. You can track the order processing in the "order list" tab on our website.
+
+If you have any questions, you can write to us at this mail or use the "help" tab on the site.
+
+Best wishes,
+Drown Store
+{% endautoescape %}
