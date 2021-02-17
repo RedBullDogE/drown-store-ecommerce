@@ -83,11 +83,20 @@ Drown Store | Checkout
                         <h4>Payment Options</h4>
                         <div class="d-block my-3">
                             {% for value, name in form.fields.payment_option.choices %}
+                            
+                            {% if name == 'PayPal' %}
+                            <div class="custom-control custom-radio">
+                                <input id="{{ name }}" name="payment_option" value="{{ value }}" type="radio"
+                                    class="custom-control-input" required disabled>
+                                <label class="custom-control-label" for="{{ name }}">{{ name }} (not available yet)</label>
+                            </div>
+                            {% else %}
                             <div class="custom-control custom-radio">
                                 <input id="{{ name }}" name="payment_option" value="{{ value }}" type="radio"
                                     class="custom-control-input" required>
                                 <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
                             </div>
+                            {% endif %}
 
                             {% endfor %}
                         </div>

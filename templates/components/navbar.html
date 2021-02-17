@@ -1,10 +1,10 @@
 {% load filters %}
 
-<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light amy-crisp-gradient scrolling-navbar">
     <div class="container">
         <!-- Brand -->
         <a class="navbar-brand waves-effect" href="{% url 'core:home-page' %}">
-            <strong class="blue-text">Drown Store</strong>
+            <strong class="indigo-text">Drown Store</strong>
         </a>
 
         <!-- Collapse -->
@@ -18,7 +18,6 @@
 
             <!-- Left -->
             <ul class="navbar-nav mr-auto">
-                <!-- TODO: Add sections to navbar: about page, maybe sale or smthng like that -->
                 {% with request.resolver_match.url_name as url_name %}
                 <li class="nav-item {% if url_name == 'home-page' %}active{% endif %}">
                     <a class="nav-link waves-effect" href="{% url 'core:home-page' %}">
