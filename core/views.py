@@ -19,7 +19,10 @@ from core.forms import CouponForm, RefundForm
 from .forms import CheckoutForm
 from .models import Address, Coupon, Item, Order, OrderItem, Payment, Refund
 
+from .utils import generate_random_code
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
+REF_CODE_LENGTH = 20
 
 
 class HomeView(ListView):
@@ -94,7 +97,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
         except ObjectDoesNotExist:
-            order = Order.objects.create(user=self.request.user)
+            order = Order.objects.create(user=self.request.user, ref_code=generate_random_code(REF_CODE_LENGTH))
 
         context = {"order": order}
         return render(self.request, "views/order_summary.html", context)
@@ -187,7 +190,7 @@ def add_to_cart(request, *args, **kwargs):
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
-            user=request.user, ordered_date=ordered_date)
+            user=request.user, ordered_date=ordered_date, ref_code=generate_random_code(REF_CODE_LENGTH))
         order.items.add(order_item)
         messages.success(request, "This item was added into your cart")
 

@@ -146,7 +146,7 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ref_code = models.CharField(
-        unique=True, max_length=20, default=generate_random_code(20))
+        unique=True, max_length=20)
     ordered = models.BooleanField(default=False)
     items = models.ManyToManyField(OrderItem)
     start_date = models.DateTimeField(auto_now_add=True)
