@@ -15,10 +15,10 @@
 
         <!-- Links -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
+            {% with request.resolver_match.url_name as url_name %}
             <!-- Left -->
             <ul class="navbar-nav mr-auto">
-                {% with request.resolver_match.url_name as url_name %}
+                
                 <li class="nav-item {% if url_name == 'home-page' %}active{% endif %}">
                     <a class="nav-link waves-effect" href="{% url 'core:home-page' %}">
                         Home
@@ -30,29 +30,35 @@
                         Refund
                     </a>
                 </li>
-                {% endwith %}
+                
             </ul>
 
             <!-- Right -->
-            <ul class="navbar-nav nav-flex-icons">
+            <ul class="navbar-nav">
 
                 {% if request.user.is_authenticated %}
-                <li class="nav-item">
+                <li class="nav-item {% if url_name == 'order-list' %}active{% endif %}">
                     <a class="nav-link waves-effect" href="{% url 'core:order-list' %}">
                         <i class="fas fa-clipboard-list"></i>
-                        <span class="clearfix d-none d-sm-inline-block">Orders</span>
+                        <span class="clearfix d-sm-inline-block">Orders</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if url_name == 'order-summary' %}active{% endif %}">
                     <a class="nav-link waves-effect" href="{% url 'core:order-summary' %}">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="clearfix d-none d-sm-inline-block">Cart</span>
-                        <span class="badge red z-depth-1 mr-1"> {{ request.user|item_count }} </span>
+                        
+                        <div class="clearfix d-sm-inline-block">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart</span>
+                            
+                            {% if request.user|item_count %}
+                            <span class="badge red z-depth-1 mr-1"> {{ request.user|item_count }} </span>            
+                            {% endif %}
+                        </div>
                     </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">User <span class="blue-text">{{ request.user.username }}</span></a>
+                      aria-haspopup="true" aria-expanded="false">User <span class="text-danger">{{ request.user.username }}</span></a>
                     <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'core:user-profile' %}">
                             <i class="fas fa-user"></i>
@@ -65,19 +71,20 @@
                     </div>
                 </li>
                 {% else %}
-                <li class="nav-item">
+                <li class="nav-item {% if url_name == 'account_login' %}active{% endif %}">
                     <a class="nav-link waves-effect" href="{% url 'account_login' %}">
-                        <span class="clearfix d-none d-sm-inline-block">Login</span>
+                        <span class="clearfix d-sm-inline-block">Login</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if url_name == 'signup' %}active{% endif %}">
                     <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
-                        <span class="clearfix d-none d-sm-inline-block">Sign Up</span>
+                        <span class="clearfix d-sm-inline-block">Sign Up</span>
                     </a>
                 </li>
                 {% endif %}
 
             </ul>
+            {% endwith %}
         </div>
     </div>
 </nav>
