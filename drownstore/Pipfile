@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+isort = "*"
+
+[packages]
+autopep8 = "==1.4.4"
+pep8 = "==1.7.1"
+pycodestyle = "==2.5.0"
+pytz = "==2018.5"
+sqlparse = "==0.2.4"
+Django = "==2.2.13"
+django-allauth = "*"
+django-crispy-forms = "*"
+django-countries = "*"
+stripe = "*"
+pillow = "*"
+django-background-tasks = "*"
+django-phonenumber-field = "*"
+phonenumbers = "*"
+psycopg2 = "*"
+
+[requires]
+python_version = "3.8"

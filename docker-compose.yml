@@ -1,0 +1,52 @@
+version: '3.7'
+
+services:
+  drownstore:
+    container_name: drownstore_app
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - ./drownstore:/app
+    env_file:
+      - .env
+    build: ./drownstore
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+  
+  nginx:
+    container_name: drownstore_nginx
+    build: ./nginx
+    volumes:
+      - static_volume:/data/static
+      - media_volume:/data/media
+      - cert_volume:/etc/letsencrypt/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - drownstore
+    restart: unless-stopped
+
+  postgres:
+    container_name: drownstore_db
+    image: postgres:12.6-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    restart: unless-stopped
+
+
+volumes:
+  static_volume:
+  media_volume:
+  postgres_data:
+  cert_volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/etc/letsencrypt/'
