@@ -34,7 +34,7 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         # get human-readable categories
-        context['categories'] = list(zip(*Item.CATEGORY_CHOICES))[1]
+        context["categories"] = list(zip(*Item.CATEGORY_CHOICES))[1]
 
         return context
 
@@ -43,11 +43,11 @@ class HomeView(ListView):
         items = Item.objects.all()
 
         # selection part: filter is applied first, then search
-        filter_query_val = self.request.GET.get('filter', None)
-        search_query_val = self.request.GET.get('search', None)
+        filter_query_val = self.request.GET.get("filter", None)
+        search_query_val = self.request.GET.get("search", None)
 
         if filter_query_val:
-            if filter_query_val == 'sale':
+            if filter_query_val == "sale":
                 items = items.filter(discount_price__isnull=False)
             else:
                 # Extra search part is needed for filtering
@@ -57,15 +57,17 @@ class HomeView(ListView):
                 extra_search_val = dict(
                     map(lambda string: string.lower(), (v, k))
                     for k, v in Item.CATEGORY_CHOICES
-                ).get(filter_query_val, '')
+                ).get(filter_query_val, "")
 
                 items = items.filter(
-                    Q(category__iexact=filter_query_val) | Q(category__iexact=extra_search_val))
+                    Q(category__iexact=filter_query_val)
+                    | Q(category__iexact=extra_search_val)
+                )
 
         if search_query_val:
             items = items.filter(Q(title__icontains=search_query_val))
 
-        return items.order_by('-time_added')
+        return items.order_by("-time_added")
 
 
 class ItemDetailView(DetailView):
@@ -77,17 +79,21 @@ class ItemDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         # Add in a QuerySet recommended items
-        item_object = context['item']
-        same_category_recommendations = Item.objects.filter(
-            category=item_object.category).exclude(id=item_object.id).order_by('-id')[:5]
+        item_object = context["item"]
+        same_category_recommendations = (
+            Item.objects.filter(category=item_object.category)
+            .exclude(id=item_object.id)
+            .order_by("-id")[:5]
+        )
 
         if not same_category_recommendations.exists():
-            another_recommendations = Item.objects.all().exclude(
-                id=item_object.id).order_by('-id')[:4]
+            another_recommendations = (
+                Item.objects.all().exclude(id=item_object.id).order_by("-id")[:4]
+            )
 
-            context['recommended'] = another_recommendations
+            context["recommended"] = another_recommendations
         else:
-            context['recommended'] = same_category_recommendations
+            context["recommended"] = same_category_recommendations
 
         return context
 
@@ -97,7 +103,9 @@ class OrderSummaryView(LoginRequiredMixin, View):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
         except ObjectDoesNotExist:
-            order = Order.objects.create(user=self.request.user, ref_code=generate_random_code(REF_CODE_LENGTH))
+            order = Order.objects.create(
+                user=self.request.user, ref_code=generate_random_code(REF_CODE_LENGTH)
+            )
 
         context = {"order": order}
         return render(self.request, "views/order_summary.html", context)
@@ -108,11 +116,7 @@ class CheckoutView(LoginRequiredMixin, View):
         checkout_form = CheckoutForm()
         coupon_form = CouponForm()
         order = Order.objects.get(user=self.request.user, ordered=False)
-        context = {
-            'form': checkout_form,
-            'couponForm': coupon_form,
-            'order': order
-        }
+        context = {"form": checkout_form, "couponForm": coupon_form, "order": order}
         return render(self.request, "views/checkout.html", context)
 
     def post(self, *args, **kwargs):
@@ -129,17 +133,17 @@ class CheckoutView(LoginRequiredMixin, View):
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
 
-        first_name = form.cleaned_data.get('first_name')
-        last_name = form.cleaned_data.get('last_name')
-        phone_number = form.cleaned_data.get('phone_number')
+        first_name = form.cleaned_data.get("first_name")
+        last_name = form.cleaned_data.get("last_name")
+        phone_number = form.cleaned_data.get("phone_number")
 
-        street_address = form.cleaned_data.get('street_address')
-        apartment_address = form.cleaned_data.get('apartment_address')
-        country = form.cleaned_data.get('country')
-        zip_code = form.cleaned_data.get('zip_code')
+        street_address = form.cleaned_data.get("street_address")
+        apartment_address = form.cleaned_data.get("apartment_address")
+        country = form.cleaned_data.get("country")
+        zip_code = form.cleaned_data.get("zip_code")
 
         # save_info = form.cleaned_data.get('save_info')
-        payment_option = form.cleaned_data.get('payment_option')
+        payment_option = form.cleaned_data.get("payment_option")
 
         billing_address = Address(
             user=self.request.user,
@@ -156,13 +160,13 @@ class CheckoutView(LoginRequiredMixin, View):
         order.shipping_address = billing_address
         order.save()
 
-        if payment_option == 'S':
-            return redirect('core:payment', payment_option='stripe')
-        elif payment_option == 'P':
-            return redirect('core:payment', payment_option='paypal')
+        if payment_option == "S":
+            return redirect("core:payment", payment_option="stripe")
+        elif payment_option == "P":
+            return redirect("core:payment", payment_option="paypal")
         else:
-            messages.warning(self.request, 'Invalid payment option selected')
-            return redirect('core:checkout')
+            messages.warning(self.request, "Invalid payment option selected")
+            return redirect("core:checkout")
 
         return redirect("core:checkout-page")
 
@@ -171,9 +175,7 @@ class CheckoutView(LoginRequiredMixin, View):
 def add_to_cart(request, *args, **kwargs):
     item = get_object_or_404(Item, *args, **kwargs)
     order_item, created = OrderItem.objects.get_or_create(
-        item=item,
-        user=request.user,
-        ordered=False
+        item=item, user=request.user, ordered=False
     )
     order_qs = Order.objects.filter(user=request.user, ordered=False)
 
@@ -190,7 +192,10 @@ def add_to_cart(request, *args, **kwargs):
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
-            user=request.user, ordered_date=ordered_date, ref_code=generate_random_code(REF_CODE_LENGTH))
+            user=request.user,
+            ordered_date=ordered_date,
+            ref_code=generate_random_code(REF_CODE_LENGTH),
+        )
         order.items.add(order_item)
         messages.success(request, "This item was added into your cart")
 
@@ -202,31 +207,29 @@ def add_to_cart(request, *args, **kwargs):
 @login_required
 def remove_from_cart(request, slug, all_items=True, *args, **kwargs):
     item = get_object_or_404(Item, slug=slug)
-    order_qs = Order.objects.filter(
-        user=request.user,
-        ordered=False
-    )
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
 
     if order_qs.exists():
         order = order_qs[0]
 
         if order.items.filter(item__slug=item.slug).exists():
             order_item = OrderItem.objects.filter(
-                item=item,
-                user=request.user,
-                ordered=False
+                item=item, user=request.user, ordered=False
             )[0]
 
             if all_items or order_item.quantity <= 1:
                 order.items.remove(order_item)
                 order_item.delete()
                 messages.success(
-                    request, "All these itemes were removed from your cart")
+                    request, "All these itemes were removed from your cart"
+                )
             else:
                 order_item.quantity -= 1
                 order_item.save()
                 messages.success(
-                    request, f"One item of {order_item.item.title} was removed from your cart")
+                    request,
+                    f"One item of {order_item.item.title} was removed from your cart",
+                )
                 return redirect("core:order-summary")
         else:
             messages.warning(request, "This item was not in your cart")
@@ -241,32 +244,25 @@ class PaymentView(LoginRequiredMixin, View):
         order = Order.objects.get(user=self.request.user, ordered=False)
 
         if order.shipping_address:
-            context = {
-                'order': order
-            }
+            context = {"order": order}
 
             return render(self.request, "views/payment.html", context)
         else:
-            messages.warning(
-                self.request, "You do not enter you shipping address")
+            messages.warning(self.request, "You do not enter you shipping address")
             return redirect("core:checkout-page")
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
 
-        token = self.request.POST.get('stripeToken')
+        token = self.request.POST.get("stripeToken")
         amount = int(order.get_order_price() * 100)
 
         try:
             # Use Stripe's library to make requests...
-            charge = stripe.Charge.create(
-                amount=amount,
-                currency="usd",
-                source=token
-            )
+            charge = stripe.Charge.create(amount=amount, currency="usd", source=token)
 
             payment = Payment()
-            payment.stripe_charge_id = charge['id']
+            payment.stripe_charge_id = charge["id"]
             payment.user = self.request.user
             payment.amount = order.get_order_price()
             payment.save()
@@ -281,36 +277,29 @@ class PaymentView(LoginRequiredMixin, View):
             with transaction.atomic():
                 for item in order_items:
                     item.save()
-            
+
             text_message = loader.render_to_string(
-                'account/email/success_payment.txt',
-                {
-                    'username': order.user.username,
-                    'ref_code': order.ref_code
-                }
+                "account/email/success_payment.txt",
+                {"username": order.user.username, "ref_code": order.ref_code},
             )
 
             html_message = loader.render_to_string(
-                'account/email/success_payment.html',
-                {
-                    'username': order.user.username,
-                    'ref_code': order.ref_code
-                }
+                "account/email/success_payment.html",
+                {"username": order.user.username, "ref_code": order.ref_code},
             )
-            
+
             send_mail(
-                'Success Payment',
+                "Success Payment",
                 text_message,
                 from_email=None,
                 recipient_list=[order.user.email],
-                html_message=html_message
+                html_message=html_message,
             )
 
-            messages.success(
-                self.request, "Your order was successfully processed")
+            messages.success(self.request, "Your order was successfully processed")
         except stripe.error.CardError as e:
             body = e.json_body
-            err = body.get('error', {})
+            err = body.get("error", {})
             messages.warning(self.request, f"{err.get('message')}")
 
         except stripe.error.RateLimitError as e:
@@ -332,10 +321,10 @@ class PaymentView(LoginRequiredMixin, View):
             messages.warning(self.request, "Something went wrong")
         except Exception as e:
             # Send an email to ourselves
-            raise(e)
+            raise (e)
             messages.warning(self.request, "A seriuos error occured.")
 
-        return redirect('/')
+        return redirect("/")
 
 
 class AddCouponView(LoginRequiredMixin, View):
@@ -344,43 +333,37 @@ class AddCouponView(LoginRequiredMixin, View):
 
         if form.is_valid():
             try:
-                order = Order.objects.get(
-                    user=self.request.user, ordered=False)
-                code = form.cleaned_data.get('code')
+                order = Order.objects.get(user=self.request.user, ordered=False)
+                code = form.cleaned_data.get("code")
 
                 try:
                     coupon = Coupon.objects.get(code=code)
                 except ObjectDoesNotExist:
-                    messages.warning(
-                        self.request, "This coupon does not exist")
+                    messages.warning(self.request, "This coupon does not exist")
                     return redirect("core:checkout-page")
 
                 order.coupon = coupon
                 order.save()
 
-                messages.success(
-                    self.request, "Coupon was successfully applied")
+                messages.success(self.request, "Coupon was successfully applied")
                 return redirect("core:checkout-page")
             except ObjectDoesNotExist:
-                messages.warning(
-                    self.request, "You do not have an active order")
+                messages.warning(self.request, "You do not have an active order")
                 return redirect("core:checkout-page")
 
 
 class RequestRefundView(View):
     def get(self, *args, **kwargs):
-        context = {
-            'form': RefundForm()
-        }
+        context = {"form": RefundForm()}
         return render(self.request, "views/refund.html", context)
 
     def post(self, *args, **kwargs):
         form = RefundForm(self.request.POST or None)
 
         if form.is_valid():
-            ref_code = form.cleaned_data.get('ref_code')
-            message = form.cleaned_data.get('message')
-            email = form.cleaned_data.get('email')
+            ref_code = form.cleaned_data.get("ref_code")
+            message = form.cleaned_data.get("message")
+            email = form.cleaned_data.get("email")
 
             try:
                 order = Order.objects.get(ref_code=ref_code)
@@ -399,22 +382,26 @@ class RequestRefundView(View):
             messages.success(self.request, "Your refund request was received!")
             return redirect("/")
         else:
-            
-            messages.warning(self.request, f"Invalid form data, please enter the correct data (email)")
+
+            messages.warning(
+                self.request,
+                f"Invalid form data, please enter the correct data (email)",
+            )
             return redirect("core:refund")
 
 
 class OrderListView(LoginRequiredMixin, ListView):
     model = Order
-    template_name = 'views/order_list.html'
-    context_object_name = 'orders'
+    template_name = "views/order_list.html"
+    context_object_name = "orders"
 
     def get_queryset(self):
-        return Order.objects.filter(ordered=True, user=self.request.user).order_by('-ordered_date')
+        return Order.objects.filter(ordered=True, user=self.request.user).order_by(
+            "-ordered_date"
+        )
 
 
 class UserProfileView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         context = {}
         return render(self.request, "views/profile.html", context)
-
